@@ -15,7 +15,9 @@ export default function Dashboard({session}: DashboardProps) {
             <Head>
                 <title>Dashboard</title>
             </Head>
-            bikin logout, bikin custom signin page, benerin redirect pas lagi login
+            <main>
+                <p>Dashboard</p>
+            </main>
         </DashboardLayout>
     )
 }

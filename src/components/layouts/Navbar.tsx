@@ -59,7 +59,7 @@ export function NavbarNested() {
     return (
         <nav className={classes.navbar}>
             {/*<ScrollArea className={classes.links} >*/}
-            <ScrollArea type={'hover'} className={`h-[calc(100vh-150px)]`}>
+            <ScrollArea type={'hover'} className={`h-[calc(100vh-130px)]`}>
                 <div className={classes.linksInner}>{links}</div>
             </ScrollArea>
 
