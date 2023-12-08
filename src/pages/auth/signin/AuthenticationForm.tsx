@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Group,
+  LoadingOverlay,
   Paper,
   PaperProps,
   PasswordInput,
@@ -15,12 +16,13 @@ import { upperFirst, useToggle } from "@mantine/hooks";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { GoogleButton } from "./GoogleButton";
+import { useEffect, useState } from "react";
+import GoogleButton from "./GoogleButton";
 
 export default function AuthenticationForm(props: Readonly<PaperProps>) {
   const param = useSearchParams().get("error");
   const [type, toggle] = useToggle<"login" | "register">(["login", "register"]);
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
       email: "",
@@ -48,6 +50,7 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
     password: string;
     terms: boolean;
   }) => {
+    setLoading(true);
     form.validate();
     if (type === "login") {
       const res = await fetch("/api/auth/local/signin", {
@@ -68,6 +71,7 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
           // @ts-ignore
           unauthorized: error.error,
         });
+        setLoading(false);
         return;
       }
     } else if (type === "register") {
@@ -92,6 +96,7 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
           // @ts-ignore
           unauthorized: error.error,
         });
+        setLoading(false);
         return;
       }
     }
@@ -102,7 +107,12 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
   }, [type]);
 
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
+    <Paper radius="md" p="xl" pos={"relative"} withBorder {...props}>
+      <LoadingOverlay
+        visible={loading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
       <Head>
         <title>{type === "login" ? "Sign in" : "Sign up"}</title>
       </Head>
@@ -113,7 +123,10 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
       <Group grow mb="md" mt="md">
         <GoogleButton
           radius="xl"
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          onClick={() => {
+            setLoading(true);
+            signIn("google", { callbackUrl: "/dashboard" });
+          }}
         >
           Google
         </GoogleButton>
