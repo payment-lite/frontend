@@ -33,7 +33,8 @@ export default function DashboardLayout({
       </AppShell.Navbar>
 
       <AppShell.Main key="Dashboard-layout">
-        {session.user.team.status !== "verified" && <UserNotVerified />}
+        {session.user.team.status === "unverified" ||
+          (session.user.team.status === "rejected" && <UserNotVerified />)}
         {children}
       </AppShell.Main>
     </AppShell>
