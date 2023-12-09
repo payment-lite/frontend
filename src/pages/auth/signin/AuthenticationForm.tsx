@@ -21,6 +21,7 @@ import GoogleButton from "./GoogleButton";
 
 export default function AuthenticationForm(props: Readonly<PaperProps>) {
   const param = useSearchParams().get("error");
+  const [error, setError] = useState<null | string>(null);
   const [type, toggle] = useToggle<"login" | "register">(["login", "register"]);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -104,7 +105,16 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
 
   useEffect(() => {
     form.clearErrors();
-  }, [type]);
+    console.log({ error, param });
+
+    if (param) {
+      if (param == "Callback") {
+        setError("Internal server error");
+        return;
+      }
+      setError(param);
+    }
+  }, [type, param]);
 
   return (
     <Paper radius="md" p="xl" pos={"relative"} withBorder {...props}>
@@ -140,9 +150,9 @@ export default function AuthenticationForm(props: Readonly<PaperProps>) {
             {form.errors.unauthorized}
           </Text>
         )}
-        {param && (
+        {error && (
           <Text ta={"center"} c={"red"}>
-            {param}
+            {error}
           </Text>
         )}
 
