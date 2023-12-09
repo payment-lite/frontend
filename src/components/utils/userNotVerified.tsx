@@ -5,7 +5,12 @@ const UserNotVerified = () => {
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
-      <Button color="#6366f1" onClick={open} size="xl" fullWidth>
+      <Button
+        className="bg-indigo-500 hover:bg-indigo-600"
+        onClick={open}
+        size="xl"
+        fullWidth
+      >
         Verified Now!
       </Button>
       <Modal
